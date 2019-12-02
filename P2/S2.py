@@ -12,14 +12,15 @@
 # Again, the three integers after the opcode indicate where the inputs and outputs are, not their values.
 
 import numpy as np
+import itertools
 
 
 def solve2(expected_value):
-	for noun in range(100):
-		for verb in range(100):
-			if expected_value == solve1(np.loadtxt("input-2.txt", delimiter=",", dtype=int), noun, verb):
-				print("Output: [Noun: " + str(noun) + " Verb: " + str(verb) + "]")
-				return noun * 100 + verb
+	pairs = np.array(np.meshgrid(np.arange(100), np.arange(100))).T.reshape(-1, 2)
+	input_data = np.loadtxt("input-2.txt", delimiter=",", dtype=int)
+	matches = list(itertools.ifilter(lambda c: solve1(np.array(input_data, copy=True), c[0], c[1]) == expected_value, pairs))
+	print("Output: [Noun: " + str(matches[0][0]) + " Verb: " + str(matches[0][1]) + "]")
+	return matches[0][0] * 100 + matches[0][1]
 
 
 def solve1(input_data, var_1, var_2):
@@ -49,7 +50,8 @@ def solve1(input_data, var_1, var_2):
 if __name__ == '__main__':
 	print("Solving quiz number 2")
 	data = np.loadtxt("input-2.txt", delimiter=",", dtype=int)
-	output1 = solve1(data, 12, 2)
-	print("Result problem 1: "+str(output1))
+	# output1 = solve1(data, 12, 2)
+	# print("Result problem 1: "+str(output1))
 	output2 = solve2(19690720)
 	print("Result problem 2: "+str(output2))
+
