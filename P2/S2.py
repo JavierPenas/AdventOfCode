@@ -14,13 +14,22 @@
 import numpy as np
 
 
-def solve1(input_data):
-	data_lenght = len(input_data)
-	i = 0
+def solve2(expected_value):
+	for noun in range(100):
+		for verb in range(100):
+			if expected_value == solve1(np.loadtxt("input-2.txt", delimiter=",", dtype=int), noun, verb):
+				print("Output: [Noun: " + str(noun) + " Verb: " + str(verb) + "]")
+				return noun * 100 + verb
+
+
+def solve1(input_data, var_1, var_2):
 	# Initial conditions
-	input_data[1] = 12
-	input_data[2] = 2
-	while (i+3) < data_lenght:
+	input_data[1] = var_1
+	input_data[2] = var_2
+	i = 0
+
+	# Iterations
+	while (i+3) < len(input_data):
 		if input_data[i] == 1:
 			res = input_data[input_data[i+1]] + input_data[input_data[i+2]]
 			input_data[input_data[i+3]] = res
@@ -28,18 +37,19 @@ def solve1(input_data):
 			res = input_data[input_data[i+1]] * input_data[input_data[i+2]]
 			input_data[input_data[i+3]] = res
 		elif input_data[i] == 99:
-			print("End execution found in pos: ", str(i))
+			# print("End execution found in pos: ", str(i))
+			return input_data[0]
 		else:
 			print("Not valid input data pos " + str(i) + ": " + str(input_data[i]))
-			exit(1)
-
+			return 0
+		# Sentence Jump
 		i = i+4
-
-	print("Value at last: " + str(input_data[0]))
 
 
 if __name__ == '__main__':
 	print("Solving quiz number 2")
 	data = np.loadtxt("input-2.txt", delimiter=",", dtype=int)
-	print(len(data))
-	solve1(data)
+	output1 = solve1(data, 12, 2)
+	print("Result problem 1: "+str(output1))
+	output2 = solve2(19690720)
+	print("Result problem 2: "+str(output2))
